@@ -28,7 +28,7 @@ function mm_widget_accessdenied($ids = '', $message = '', $roles = ''){
 		$output = "//  -------------- accessdenied widget include ------------- \n";
 		
 		if (in_array($docid, $ids)){
-			$output .= includeCss($modx->config['base_url'] . 'assets/plugins/managermanager/widgets/accessdenied/accessdenied.css');
+			$output .= includeJsCss($modx->config['base_url'] . 'assets/plugins/managermanager/widgets/accessdenied/accessdenied.css', 'js');
 			
 			$output .= '
 			$j("input, div, form[name=mutate]").remove(); // Remove all content from the page
