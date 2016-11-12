@@ -11,6 +11,9 @@
  * @param $message {string} - HTML formatted message. Default: 'Access denied - Access to current document closed for security reasons.'.
  * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
  * 
+ * @event OnDocFormPrerender
+ * @event OnDocFormRender
+ * 
  * @link http://code.divandesign.biz/modx/mm_widget_accessdenied/1.1.1
  * 
  * Icon by designmagus.com
@@ -19,10 +22,18 @@
  */
 
 function mm_widget_accessdenied($documentIds = '', $message = '', $roles = ''){
+	if (!useThisRule($roles)){return;}
+	
 	global $modx;
 	$e = &$modx->Event;
 	
-	if ($e->name == 'OnDocFormRender' && useThisRule($roles)){
+	if ($e->name == 'OnDocFormPrerender'){
+		$widgetDir = $modx->config['site_url'].'assets/plugins/managermanager/widgets/accessdenied/';
+		
+		$output = includeJsCss($widgetDir.'accessdenied.css', 'html');
+		
+		$e->output($output);
+	}else if ($e->name == 'OnDocFormRender'){
 		if (empty($message)){$message = '<span>Access denied</span>Access to current document closed for security reasons.';}
 		
 		$docId = (int)$_GET[id];
@@ -32,7 +43,6 @@ function mm_widget_accessdenied($documentIds = '', $message = '', $roles = ''){
 		$output = "//---------- mm_widget_accessdenied :: Begin -----\n";
 		
 		if (in_array($docId, $documentIds)){
-			$output .= includeJsCss($modx->config['base_url'] . 'assets/plugins/managermanager/widgets/accessdenied/accessdenied.css', 'js');
 			
 			$output .=
 '
