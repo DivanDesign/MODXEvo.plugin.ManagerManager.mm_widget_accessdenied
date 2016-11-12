@@ -5,23 +5,29 @@
  * 
  * @desc A widget for ManagerManager plugin that allows access to specific documents (by ID) to be denied without inheritance on the document editing page.
  * 
- * @uses ManagerManager plugin 0.6.
+ * @uses MODXEvo.plugin.ManagerManager >= 0.6.
  * 
- * @param $documentIds {comma separated string} - List of documents ID to prevent access. @required
- * @param $message {string} - HTML formatted message. Default: 'Access denied - Access to current document closed for security reasons.'.
- * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
+ * @param $documentIds {string_commaSeparated} — List of documents ID to prevent access. @required
+ * @param $message {string} — HTML formatted message. Default: 'Access denied - Access to current document closed for security reasons.'.
+ * @param $roles {string_commaSeparated} — The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
  * 
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
  * @link http://code.divandesign.biz/modx/mm_widget_accessdenied/1.1.1
  * 
- * Icon by designmagus.com
- * Originally written by Metaller
+ * @author Icon by designmagus.com
+ * @author Originally written by Metaller
+ * @author DivanDesign
+ * 
  * @copyright 2013
  */
 
-function mm_widget_accessdenied($documentIds = '', $message = '', $roles = ''){
+function mm_widget_accessdenied(
+	$documentIds = '',
+	$message = '',
+	$roles = ''
+){
 	if (!useThisRule($roles)){return;}
 	
 	global $modx;
@@ -40,10 +46,9 @@ function mm_widget_accessdenied($documentIds = '', $message = '', $roles = ''){
 		
 		$documentIds = makeArray($documentIds);
 		
-		$output = "//---------- mm_widget_accessdenied :: Begin -----\n";
+		$output = '//---------- mm_widget_accessdenied :: Begin -----'.PHP_EOL;
 		
 		if (in_array($docId, $documentIds)){
-			
 			$output .=
 '
 $j("input, div, form[name=mutate]").remove(); // Remove all content from the page
@@ -52,7 +57,7 @@ $j("#aback").css({height: $j("body").height()} );
 ';
 		}
 		
-		$output .= "//---------- mm_widget_accessdenied :: End -----\n";
+		$output .= '//---------- mm_widget_accessdenied :: End -----'.PHP_EOL;
 		
 		$e->output($output);
 	}
