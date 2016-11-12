@@ -7,7 +7,7 @@
  * 
  * @uses ManagerManager plugin 0.6.
  * 
- * @param $ids {comma separated string} - List of documents ID to prevent access. @required
+ * @param $documentIds {comma separated string} - List of documents ID to prevent access. @required
  * @param $message {string} - HTML formatted message. Default: 'Access denied - Access to current document closed for security reasons.'.
  * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
  * 
@@ -18,20 +18,20 @@
  * @copyright 2013
  */
 
-function mm_widget_accessdenied($ids = '', $message = '', $roles = ''){
+function mm_widget_accessdenied($documentIds = '', $message = '', $roles = ''){
 	global $modx;
 	$e = &$modx->Event;
 	
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles)){
 		if (empty($message)){$message = '<span>Access denied</span>Access to current document closed for security reasons.';}
 		
-		$docid = (int)$_GET[id];
+		$docId = (int)$_GET[id];
 		
-		$ids = makeArray($ids);
+		$documentIds = makeArray($documentIds);
 		
 		$output = "//---------- mm_widget_accessdenied :: Begin -----\n";
 		
-		if (in_array($docid, $ids)){
+		if (in_array($docId, $documentIds)){
 			$output .= includeJsCss($modx->config['base_url'] . 'assets/plugins/managermanager/widgets/accessdenied/accessdenied.css', 'js');
 			
 			$output .=
