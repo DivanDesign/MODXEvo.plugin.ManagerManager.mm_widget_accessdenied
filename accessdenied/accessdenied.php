@@ -70,7 +70,8 @@ function mm_widget_accessdenied($params){
 		if (in_array($docId, $params->documentIds)){
 			$output .=
 '
-$j("input, div, form[name=mutate]").remove(); // Remove all content from the page
+// Remove all content from the page
+$j("input, div").remove();
 $j("body").prepend(\'<div id="aback"><div id="amessage">'.$params->message.'</div></div>\');
 $j("#aback").css({height: $j("body").height()} );
 ';
