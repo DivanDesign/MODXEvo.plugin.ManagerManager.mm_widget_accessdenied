@@ -73,7 +73,9 @@ function mm_widget_accessdenied($params){
 // Remove all content from the page
 $j("input, div").remove();
 $j("body").prepend(\'<div id="aback"><div id="amessage">'.$params->message.'</div></div>\');
-$j("#aback").css({height: $j("body").height()} );
+$j("#aback").css({
+	height: Math.max($j("body").height(), $j(document).height())
+});
 ';
 		}
 		
