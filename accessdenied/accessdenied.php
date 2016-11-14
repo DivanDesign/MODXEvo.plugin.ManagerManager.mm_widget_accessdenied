@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_widget_accessdenied
- * @version 1.1.1 (2013-12-11)
+ * @version 1.2 (2016-11-14)
  * 
  * @desc A widget for ManagerManager plugin that allows access to specific documents (by ID) to be denied without inheritance on the document editing page.
  * 
@@ -16,13 +16,13 @@
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_widget_accessdenied/1.1.1
+ * @link http://code.divandesign.biz/modx/mm_widget_accessdenied/1.2
  * 
  * @author Icon by designmagus.com
  * @author Originally written by Metaller
  * @author DivanDesign
  * 
- * @copyright 2013
+ * @copyright 2012–2016
  */
 
 function mm_widget_accessdenied($params){
