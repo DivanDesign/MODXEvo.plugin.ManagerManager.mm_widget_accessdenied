@@ -5,11 +5,13 @@
  * 
  * @desc A widget for ManagerManager plugin that allows access to specific documents (by ID) to be denied without inheritance on the document editing page.
  * 
- * @uses MODXEvo.plugin.ManagerManager >= 0.6.
+ * @uses PHP >= 5.4.
+ * @uses MODXEvo.plugin.ManagerManager >= 0.7.
  * 
- * @param $documentIds {string_commaSeparated} — List of documents ID to prevent access. @required
- * @param $message {string} — HTML formatted message. Default: 'Access denied - Access to current document closed for security reasons.'.
- * @param $roles {string_commaSeparated} — The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
+ * @param $params {array_associative|stdClass} — The object of params. @required
+ * @param $params['documentIds'] {string_commaSeparated} — List of documents ID to prevent access. @required
+ * @param $params['message'] {string} — HTML formatted message. Default: '<span>Access denied</span>Access to current document closed for security reasons.'.
+ * @param $params['roles'] {string_commaSeparated} — The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
  * 
  * @event OnDocFormPrerender
  * @event OnDocFormRender
@@ -23,12 +25,31 @@
  * @copyright 2013
  */
 
-function mm_widget_accessdenied(
-	$documentIds = '',
-	$message = '',
-	$roles = ''
-){
-	if (!useThisRule($roles)){return;}
+function mm_widget_accessdenied($params){
+	//For backward compatibility
+	if (
+		!is_array($params) &&
+		!is_object($params)
+	){
+		//Convert ordered list of params to named
+		$params = ddTools::orderedParamsToNamed([
+			'paramsList' => func_get_args(),
+			'compliance' => [
+				'documentIds',
+				'message',
+				'roles'
+			]
+		]);
+	}
+	
+	//Defaults
+	$params = (object) array_merge([
+		'documentIds' => '',
+		'message' => '<span>Access denied</span>Access to current document closed for security reasons.',
+		'roles' => ''
+	], (array) $params);
+	
+	if (!useThisRule($params->roles)){return;}
 	
 	global $modx;
 	$e = &$modx->Event;
@@ -40,19 +61,17 @@ function mm_widget_accessdenied(
 		
 		$e->output($output);
 	}else if ($e->name == 'OnDocFormRender'){
-		if (empty($message)){$message = '<span>Access denied</span>Access to current document closed for security reasons.';}
-		
 		$docId = (int)$_GET[id];
 		
-		$documentIds = makeArray($documentIds);
+		$params->documentIds = makeArray($params->documentIds);
 		
 		$output = '//---------- mm_widget_accessdenied :: Begin -----'.PHP_EOL;
 		
-		if (in_array($docId, $documentIds)){
+		if (in_array($docId, $params->documentIds)){
 			$output .=
 '
 $j("input, div, form[name=mutate]").remove(); // Remove all content from the page
-$j("body").prepend(\'<div id="aback"><div id="amessage">'.$message.'</div></div>\');
+$j("body").prepend(\'<div id="aback"><div id="amessage">'.$params->message.'</div></div>\');
 $j("#aback").css({height: $j("body").height()} );
 ';
 		}
