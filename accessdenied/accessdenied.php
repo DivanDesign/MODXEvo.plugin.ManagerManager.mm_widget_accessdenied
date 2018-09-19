@@ -10,6 +10,7 @@
  * 
  * @param $params {array_associative|stdClass} — The object of params. @required
  * @param $params['documentIds'] {string_commaSeparated} — List of documents ID to prevent access. @required
+ * @param $params['templateIds'] {string_commaSeparated} — List of templates ID to prevent access. @required
  * @param $params['message'] {string} — HTML formatted message. Default: '<span>Access denied</span>Access to current document closed for security reasons.'.
  * @param $params['roles'] {string_commaSeparated} — The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
  * 
@@ -36,6 +37,7 @@ function mm_widget_accessdenied($params){
 			'paramsList' => func_get_args(),
 			'compliance' => [
 				'documentIds',
+				'templateIds',
 				'message',
 				'roles'
 			]
@@ -45,6 +47,7 @@ function mm_widget_accessdenied($params){
 	//Defaults
 	$params = (object) array_merge([
 		'documentIds' => '',
+		'templateIds' => '',
 		'message' => '<span>Access denied</span>Access to current document closed for security reasons.',
 		'roles' => ''
 	], (array) $params);
@@ -62,12 +65,14 @@ function mm_widget_accessdenied($params){
 		$e->output($output);
 	}else if ($e->name == 'OnDocFormRender'){
 		$docId = (int)$_GET[id];
+		$tmpId = (int)$e->params['template'];
 		
 		$params->documentIds = makeArray($params->documentIds);
+		$params->templateIds = makeArray($params->templateIds);
 		
 		$output = '//---------- mm_widget_accessdenied :: Begin -----'.PHP_EOL;
 		
-		if (in_array($docId, $params->documentIds)){
+		if (in_array($docId, $params->documentIds) || in_array($tmpId, $params->templateIds)){
 			$output .=
 '
 // Remove all content from the page
